@@ -199,7 +199,6 @@
 
   var peer = new Peer({
     host: 'webrtc-ke3z.onrender.com',
-    port: 3000,
     path: '/peerjs',
     config: {
       'iceServers': [
@@ -224,9 +223,9 @@
         }
       ]
     },
-
     debug: 3
   });
+
 
   let myVideoStream;
   navigator.mediaDevices
