@@ -19,10 +19,9 @@ const peerServer = ExpressPeerServer(server, {
 
 app.set("view engine", "ejs");
 
+app.use(cors());
 app.use("/peerjs", peerServer);
 app.use(express.static("public"));
-
-app.use(cors());
 
 function generateMeetingLink() {
   const abc = generateRandomString(3);
