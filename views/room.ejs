@@ -257,20 +257,24 @@
 
     });
 
-  const addVideoStream = (video, stream) => {
+  const addVideoStream = (video, stream, userName) => {
     video.srcObject = stream;
     video.addEventListener("loadedmetadata", () => {
       video.play();
       videoGrid.append(video);
+
+      const nameContainer = document.createElement("div");
+      nameContainer.innerText = userName;
+      videoGrid.appendChild(nameContainer);
     });
   };
 
-  const connectToNewUser = (userId, stream) => {
+  const connectToNewUser = (userId, stream, userName) => {
     console.log('I call someone' + userId);
     const call = peer.call(userId, stream);
     const video = document.createElement("video");
     call.on("stream", (userVideoStream) => {
-      addVideoStream(video, userVideoStream);
+      addVideoStream(video, userVideoStream, userName);
     });
 
     call.on("close", () => {
