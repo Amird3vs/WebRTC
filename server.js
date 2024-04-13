@@ -40,6 +40,8 @@ app.get("/:room", (req, res) => {
   res.render("room", { roomId: req.params.room });
 });
 
+const rooms = {};
+
 io.on("connection", (socket) => {
   socket.on("join-room", (roomId, userId, userName) => {
     socket.join(roomId);
