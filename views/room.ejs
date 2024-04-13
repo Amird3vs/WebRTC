@@ -251,6 +251,12 @@
         console.log('User connected:', user);
       });
 
+      socket.on("existing-users", (existingUsernames) => {
+        existingUsernames.forEach((username) => {
+          displayUsername(username);
+        });
+      });
+
       socket.on("user-disconnected", (userId) => {
         if (peers[userId]) peers[userId].close()
       });
