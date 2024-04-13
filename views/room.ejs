@@ -263,9 +263,14 @@
       video.play();
       videoGrid.append(video);
 
-      const nameContainer = document.createElement("div");
-      nameContainer.innerText = userName;
-      videoGrid.appendChild(nameContainer);
+      // Create a text element to display the user's name
+      const nameText = document.createElement("div");
+      nameText.innerText = userName;
+      nameText.classList.add("video-name");
+      videoGrid.appendChild(nameText);
+
+      // Log the user's name
+      console.log("User's name:", userName);
     });
   };
 
@@ -274,7 +279,7 @@
     const call = peer.call(userId, stream);
     const video = document.createElement("video");
     call.on("stream", (userVideoStream) => {
-      addVideoStream(video, userVideoStream, userName);
+      addVideoStream(video, userVideoStream, userName); // Pass the userName to addVideoStream
     });
 
     call.on("close", () => {
