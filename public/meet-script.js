@@ -622,10 +622,7 @@ async function detectSign(net) {
             document.getElementById(containerId).style.borderColor = '#15E8D8'; // Change border color of the container
             socket.emit('gesture-detected', 'blue', containerId); // Send container id
         } else {
-            const userId = myUserId; // Assuming you want to send the user's own userId
-            const containerId = `container-${userId}`; // Generate container id
             document.getElementById(containerId).style.borderColor = 'rgba(220, 220, 220, 0.1)'; // Change border color of the container
-            socket.emit('gesture-detected', 'blue', containerId); // Send container id
         }
     }, 100);
 }
