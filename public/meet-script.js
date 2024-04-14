@@ -87,6 +87,7 @@ window.addEventListener('beforeunload', () => {
             call.close();
         }
     }
+    socket.disconnect();
 });
 
 const connectToNewUser = (userId, stream, userName) => {
