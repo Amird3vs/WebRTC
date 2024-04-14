@@ -616,13 +616,15 @@ async function detectSign(net) {
         const video = document.querySelector('video');
         const handData = await net.estimateHands(video);
 
+        const userId = myUserId; // Assuming you want to send your own userId
+        const containerId = `container-${userId}`;
+        const container = document.getElementById(containerId);
+
         if (handData.length > 0) {
-            const userId = myUserId; // Assuming you want to send the user's own userId
-            const containerId = `container-${userId}`; // Generate container id
-            document.getElementById(containerId).style.borderColor = '#15E8D8'; // Change border color of the container
-            socket.emit('gesture-detected', 'blue', containerId); // Send container id
+            container.style.borderColor = '#15E8D8';
+            socket.emit('gesture-detected', 'blue', containerId); // Sending both gesture and containerId
         } else {
-            document.getElementById(containerId).style.borderColor = 'rgba(220, 220, 220, 0.1)'; // Change border color of the container
+            container.style.borderColor = 'rgba(220, 220, 220, 0.1)';
         }
     }, 100);
 }
@@ -631,7 +633,11 @@ socket.on('receive-gesture', (gesture, containerId) => {
     console.log(`Received gesture "${gesture}" for container ${containerId}`);
     const container = document.getElementById(containerId);
     if (container) {
-        container.style.borderColor = '#15E8D8';
+        if (gesture === 'blue') {
+            container.style.borderColor = '#15E8D8';
+        } else {
+            container.style.borderColor = 'rgba(220, 220, 220, 0.1)';
+        }
     } else {
         console.error(`Container with id ${containerId} not found.`);
     }
