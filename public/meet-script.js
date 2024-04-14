@@ -598,7 +598,7 @@ function updateTimeAndCode() {
         var fullContent = currentTimeString + "   |   " + meetingCode;
         document.getElementById('current-time').textContent = fullContent;
 
-        var meetingURL = window.location.origin + '/' + meetingCode;
+        var meetingURL = window.location.origin + '/' + "join/" + meetingCode;
         document.getElementById('meeting-url').value = meetingURL;
     } else {
         document.getElementById('current-time').textContent = "Meeting Code not found | " + currentTimeString;
@@ -616,13 +616,13 @@ async function detectSign(net) {
         const video = document.querySelector('video');
         const handData = await net.estimateHands(video);
 
-        const userId = myUserId; // Assuming you want to send your own userId
+        const userId = myUserId;
         const containerId = `container-${userId}`;
         const container = document.getElementById(containerId);
 
         if (handData.length > 0) {
             container.style.borderColor = '#15E8D8';
-            socket.emit('gesture-detected', 'blue', containerId); // Sending both gesture and containerId
+            socket.emit('gesture-detected', 'blue', containerId);
         } else {
             container.style.borderColor = 'rgba(220, 220, 220, 0.1)';
         }

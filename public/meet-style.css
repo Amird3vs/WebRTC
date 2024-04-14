@@ -58,7 +58,7 @@ main {
 
 .main-cont {
     overflow: auto;
-    height: 92vh;
+    height: 90vh;
     display: flex;
     flex-direction: column;
 }
@@ -74,7 +74,7 @@ main {
     display: grid;
     gap: 10px;
     place-items: center;
-    overflow: scroll;
+    overflow-x: scroll;
 }
 
 .video-container {
@@ -116,6 +116,9 @@ video {
     padding: 1rem;
     display: flex;
     background-color: var(--main-dark);
+    position: fixed;
+    bottom: 0;
+    width: 100%;
 }
 
 .options__left {

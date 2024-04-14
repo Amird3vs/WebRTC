@@ -43,7 +43,7 @@ app.get("/:room", (req, res) => {
 
 io.on("connection", (socket) => {
   socket.on("join-room", (roomId, userId, userName) => {
-    socket.join(roomId);
+    socket.join(roomId, userId);
     setTimeout(() => {
       socket.to(roomId).emit("user-connected", userId, userName);
     }, 1000);
