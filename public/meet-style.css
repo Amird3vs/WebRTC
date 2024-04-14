@@ -72,6 +72,7 @@ main {
 .videos__group {
     width: 100%;
     display: grid;
+    gap: 10px;
     place-items: center;
     overflow: scroll;
 }
