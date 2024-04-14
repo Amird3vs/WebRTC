@@ -33,11 +33,18 @@ var peer = new Peer({
 
 let myUserId;
 
-peer.on("open", (id) => {
+// Function to handle the "open" event of peer
+function handlePeerOpen(id) {
     console.log('my id is' + id);
     myUserId = id;
     socket.emit("join-room", ROOM_ID, id, user);
-});
+    // Now that myUserId is populated, call addVideoStream if myVideoStream is available
+    if (myVideoStream) {
+        addVideoStream(myVideo, myVideoStream, myUserId);
+    }
+}
+
+peer.on("open", handlePeerOpen);
 
 let myVideoStream;
 navigator.mediaDevices
@@ -47,7 +54,11 @@ navigator.mediaDevices
     })
     .then((stream) => {
         myVideoStream = stream;
-        addVideoStream(myVideo, stream, myUserId);
+
+        // If myUserId is already populated, call addVideoStream
+        if (myUserId) {
+            addVideoStream(myVideo, myVideoStream, myUserId);
+        }
 
         peer.on("call", (call) => {
             console.log('someone call me');
