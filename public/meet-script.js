@@ -609,7 +609,7 @@ function updateTimeAndCode() {
         var fullContent = currentTimeString + "   |   " + meetingCode;
         document.getElementById('current-time').textContent = fullContent;
 
-        var meetingURL = window.location.origin + '/' + "join/" + meetingCode;
+        var meetingURL = "http://salinsenyasv1.000webhostapp.com/Join/" + meetingCode;
         document.getElementById('meeting-url').value = meetingURL;
     } else {
         document.getElementById('current-time').textContent = "Meeting Code not found | " + currentTimeString;
