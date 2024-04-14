@@ -19,9 +19,10 @@ const peerServer = ExpressPeerServer(server, {
 
 app.set("view engine", "ejs");
 
-app.use(cors());
 app.use("/peerjs", peerServer);
 app.use(express.static("public"));
+
+app.use(cors());
 
 function generateMeetingLink() {
   const abc = generateRandomString(3);
@@ -40,24 +41,12 @@ app.get("/:room", (req, res) => {
   res.render("room", { roomId: req.params.room });
 });
 
-const rooms = {};
-
 io.on("connection", (socket) => {
   socket.on("join-room", (roomId, userId, userName) => {
     socket.join(roomId);
-
-    if (!rooms[roomId]) {
-      rooms[roomId] = {
-        users: [{ userId, userName }]
-      };
-    } else {
-      rooms[roomId].users.push({ userId, userName });
-    }
-    
-    const existingUsernames = rooms[roomId].users.map(user => user.userName);
-    socket.emit("existing-users", existingUsernames);
-    socket.to(roomId).emit("user-connected", userId, userName);
-
+    setTimeout(() => {
+      socket.to(roomId).emit("user-connected", userId, userName);
+    }, 1000);
     socket.on("message", (message) => {
       io.to(roomId).emit("createMessage", message, userName);
     });
