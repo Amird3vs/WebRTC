@@ -9,8 +9,7 @@ const queryParams = new URLSearchParams(window.location.search);
 const user = queryParams.get('displayName');
 
 var peer = new Peer({
-    host: '127.0.0.1',
-    port: 3000,
+    host: 'https://webrtc-9u7q.onrender.com',
     path: '/peerjs',
     config: {
         'iceServers': [
