@@ -543,6 +543,14 @@ input[type=file]::file-selector-button:hover {
         flex: 1;
     }
 
+    .videos__group {
+        max-width: 100%; /* Allow the container to take up full width on smaller screens */
+    }
+
+    #video-grid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Adjust column width for smaller screens */
+    }
+
     video {
         height: auto;
         width: 100%;
