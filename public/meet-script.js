@@ -607,7 +607,7 @@ function updateTimeAndCode() {
         var fullContent = currentTimeString + "   |   " + meetingCode;
         document.getElementById('current-time').textContent = fullContent;
 
-        var meetingURL = "https://salinsenyas.github.io/Calls" + meetingCode;
+        var meetingURL = "https://salinsenyas.github.io/Join/" + meetingCode;
         document.getElementById('meeting-url').value = meetingURL;
     } else {
         document.getElementById('current-time').textContent = "Meeting Code not found | " + currentTimeString;
