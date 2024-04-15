@@ -9,7 +9,8 @@ const queryParams = new URLSearchParams(window.location.search);
 const user = queryParams.get('displayName');
 
 var peer = new Peer({
-    host: 'webrtc-9u7q.onrender.com',
+    host: '127.0.0.1',
+    port: 3000,
     path: '/peerjs',
     config: {
         'iceServers': [
@@ -33,12 +34,10 @@ var peer = new Peer({
 
 let myUserId;
 
-// Function to handle the "open" event of peer
 function handlePeerOpen(id) {
     console.log('my id is' + id);
     myUserId = id;
     socket.emit("join-room", ROOM_ID, id, user);
-    // Now that myUserId is populated, call addVideoStream if myVideoStream is available
     if (myVideoStream) {
         addVideoStream(myVideo, myVideoStream, myUserId);
     }
@@ -55,7 +54,6 @@ navigator.mediaDevices
     .then((stream) => {
         myVideoStream = stream;
 
-        // If myUserId is already populated, call addVideoStream
         if (myUserId) {
             addVideoStream(myVideo, myVideoStream, myUserId);
         }
@@ -610,7 +608,7 @@ function updateTimeAndCode() {
         var fullContent = currentTimeString + "   |   " + meetingCode;
         document.getElementById('current-time').textContent = fullContent;
 
-        var meetingURL = "http://salinsenyasv1.000webhostapp.com/Join/" + meetingCode;
+        var meetingURL = "https://salinsenyas.github.io/Calls" + meetingCode;
         document.getElementById('meeting-url').value = meetingURL;
     } else {
         document.getElementById('current-time').textContent = "Meeting Code not found | " + currentTimeString;
