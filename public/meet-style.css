@@ -138,7 +138,91 @@ video {
     margin-left: auto;
 }
 
+.camera_settings,
+.audio_settings {
+    display: flex;
+    align-items: center;
+    background-color: rgba(220, 220, 220, 0.1);
+    margin: 0 0.3rem;
+    border-radius: 10px;
+}
+
+.arrow-up {
+    color: #fff;
+    cursor: pointer;
+}
+
+.modal {
+    font-family: inherit;
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    background-color: #1f272f;
+    margin: 20% auto;
+    border-radius: 10px;
+    max-width: 400px;
+}
+
+.modal-header {
+    padding: 5px 10px;
+    color: #15E8D8;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    border-bottom: 1px dashed #888;
+}
+
+.modal-title {
+    font-size: 0.9rem;
+}
+
+.modal-body {
+    padding: 10px;
+    color: #fff;
+}
+
+.modal-content select {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    box-sizing: border-box;
+    font-size: 16px;
+    background-color: transparent;
+    outline: none;
+    border: none;
+    color: #fff;
+}
+
+.modal-content select:focus {
+    outline: none;
+    border-color: #4CAF50;
+}
+
+.close {
+    float: right;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+.close:hover {
+    color: #fff;
+}
+
+#deviceList {
+    list-style-type: none;
+    padding: 0;
+}
+
 .options__button {
+    position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -151,6 +235,12 @@ video {
     margin: 0 0.5rem;
     cursor: pointer;
     border: none;
+    margin-right: auto;
+}
+
+.camBtn,
+.voiceBtn {
+    margin: 0;
 }
 
 .end-call {

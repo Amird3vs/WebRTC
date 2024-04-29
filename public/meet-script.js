@@ -9,7 +9,7 @@ const queryParams = new URLSearchParams(window.location.search);
 const user = queryParams.get('displayName');
 
 var peer = new Peer({
-    host: 'webrtc-9u7q.onrender.com',
+    host: 'https://webrtc-9u7q.onrender.com',
     path: '/peerjs',
     config: {
         'iceServers': [
@@ -246,7 +246,6 @@ function createReaction(reaction, userName) {
 }
 
 socket.on("receiveReaction", (reaction, userName) => {
-    console.log('Receiving reaction:', reaction, userName);
     createReaction(reaction, userName);
 });
 
@@ -532,6 +531,124 @@ function copyMeetingUrl() {
         showConfirmButton: false,
         timer: 1500
     });
+}
+
+document.getElementById('listCameraDevices').addEventListener('click', listCameraDevices);
+document.getElementById('listMicrophoneDevices').addEventListener('click', listMicrophoneDevices);
+let cameras = [];
+let microphones = [];
+
+document.getElementById('deviceList').addEventListener('change', function () {
+    const selectedCamera = this.value;
+
+    const selectedCameraDevice = cameras.find(camera => camera.label === selectedCamera);
+
+    if (selectedCameraDevice) {
+        navigator.mediaDevices.getUserMedia({
+            video: {
+                deviceId: { exact: selectedCameraDevice.deviceId }
+            }
+        })
+            .then((stream) => {
+                if (myVideo.srcObject) {
+                    const tracks = myVideo.srcObject.getTracks();
+                    tracks.forEach(track => track.stop());
+                }
+
+                myVideo.srcObject = stream;
+                myVideoStream = stream;
+                myVideo.play();
+            })
+            .catch(err => {
+                console.error('Error updating video stream:', err);
+            });
+    }
+});
+
+function listCameraDevices() {
+    navigator.mediaDevices.enumerateDevices()
+        .then(devices => {
+            cameras = devices.filter(device => device.kind === 'videoinput');
+            if (cameras.length === 0) {
+                showModal('No camera devices found.');
+            } else {
+                const cameraNames = cameras.map(camera => camera.label);
+                showModal('Available Camera Devices:', cameraNames);
+
+                const deviceList = document.getElementById('deviceList');
+                deviceList.innerHTML = '';
+                cameraNames.forEach(name => {
+                    const option = document.createElement('option');
+                    option.textContent = name;
+                    deviceList.appendChild(option);
+                });
+
+                deviceList.dispatchEvent(new Event('change'));
+            }
+        })
+        .catch(err => {
+            console.error('Error listing camera devices:', err);
+            showModal('Error', 'Error listing camera devices. Please check your browser permissions.');
+        });
+}
+
+function listMicrophoneDevices() {
+    navigator.mediaDevices.enumerateDevices()
+        .then(devices => {
+            microphones = devices.filter(device => device.kind === 'audioinput');
+            if (microphones.length === 0) {
+                showModal('No microphone devices found.');
+            } else {
+                const microphoneNames = microphones.map(microphone => microphone.label);
+                showModal('Available Microphone Devices:', microphoneNames);
+
+                const deviceList = document.getElementById('deviceList');
+                deviceList.innerHTML = '';
+                microphoneNames.forEach(name => {
+                    const option = document.createElement('option');
+                    option.textContent = name;
+                    deviceList.appendChild(option);
+                });
+
+                deviceList.dispatchEvent(new Event('change'));
+            }
+        })
+        .catch(err => {
+            console.error('Error listing microphone devices:', err);
+            showModal('Error', 'Error listing microphone devices. Please check your browser permissions.');
+        });
+}
+
+function showModal(title, content) {
+    const modal = document.getElementById('deviceListModal');
+    const modalTitle = document.getElementById('modalTitle');
+    const deviceList = document.getElementById('deviceList');
+
+    modal.style.display = 'block';
+    modalTitle.textContent = title;
+
+    deviceList.innerHTML = '';
+
+    if (Array.isArray(content)) {
+        content.forEach(item => {
+            const option = document.createElement('option');
+            option.textContent = item;
+            deviceList.appendChild(option);
+        });
+    } else {
+        const option = document.createElement('option');
+        option.textContent = content;
+        deviceList.appendChild(option);
+    }
+    document.getElementsByClassName('close')[0].onclick = function () {
+        modal.style.display = 'none';
+    }
+
+    window.onclick = function (event) {
+        if (event.target == modal) {
+            modal.style.display = 'none';
+        }
+    }
 }
 
 function toggleSection(sectionId) {

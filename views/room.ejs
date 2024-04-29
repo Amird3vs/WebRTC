@@ -102,6 +102,18 @@
         </div>
       </div>
 
+      <div id="deviceListModal" class="modal">
+        <div class="modal-content">
+          <div class="modal-header">
+            <span class="close">&times;</span>
+            <p id="modalTitle" class="modal-title"></p>
+          </div>
+          <div class="modal-body">
+            <select id="deviceList"></select>
+          </div>
+        </div>
+      </div>
+
       <div class="options animate__animated animate__bounceInUp">
         <div class="options__left">
           <div class="current-time-code" id="current-time">
@@ -109,14 +121,24 @@
         </div>
 
         <div class="options__middle">
-          <button id="muteButton" class="options__button">
-            <i class="fa fa-microphone"></i>
-          </button>
-          <button id="stopVideo" class="options__button">
-            <i class="fa fa-video-camera"></i>
-          </button>
+          <div class="audio_settings">
+            <span id="listMicrophoneDevices" class="material-symbols-outlined arrow-up">
+              keyboard_arrow_up
+            </span>
+            <button id="muteButton" class="options__button camBtn">
+              <i class="fa fa-microphone"></i>
+            </button>
+          </div>
+          <div class="camera_settings">
+            <span id="listCameraDevices" class="material-symbols-outlined arrow-up">
+              keyboard_arrow_up
+            </span>
+            <button id="stopVideo" class="options__button voiceBtn">
+              <i class="fa fa-video-camera"></i>
+            </button>
+          </div>
           <button class="options__button end-call">
-            <span class="material-symbols-outlined">call_end</span>
+            <span class="material-symbols-outlined ">call_end</span>
           </button>
           <div class="reactions-container">
             <button class="options__button reactions-btn" onclick="toggleReactions()">
