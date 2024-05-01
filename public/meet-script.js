@@ -9,7 +9,8 @@ const queryParams = new URLSearchParams(window.location.search);
 const user = queryParams.get('displayName');
 
 var peer = new Peer({
-    host: 'webrtc-9u7q.onrender.com',
+    host: '127.0.0.1',
+    port: '3000',
     path: '/peerjs',
     config: {
         'iceServers': [
@@ -724,7 +725,7 @@ function updateTimeAndCode() {
         var fullContent = currentTimeString + "   |   " + meetingCode;
         document.getElementById('current-time').textContent = fullContent;
 
-        var meetingURL = "https://salinsenyas.github.io/Join/" + meetingCode;
+        var meetingURL = "https://salin-senyas.github.io/Join/" + meetingCode;
         document.getElementById('meeting-url').value = meetingURL;
     } else {
         document.getElementById('current-time').textContent = "Meeting Code not found | " + currentTimeString;
@@ -749,10 +750,43 @@ async function detectSign(net) {
         if (handData.length > 0) {
             container.style.borderColor = '#15E8D8';
             socket.emit('gesture-detected', 'blue', containerId);
+
+            const Handsigns = await importHandsigns();
+
+            const GE = new fp.GestureEstimator(Object.values(Handsigns));
+            const gesture = GE.estimate(handData[0].landmarks, 8.5);
+            const mostConfidentPrediction = gesture.gestures[0];
+
+            if (mostConfidentPrediction) {
+                socket.emit('recognized-gesture', mostConfidentPrediction.name);
+                console.log('Recognized gesture:', mostConfidentPrediction.name);
+            }
         } else {
             container.style.borderColor = 'rgba(220, 220, 220, 0.1)';
         }
     }, 100);
+}
+
+async function importHandsigns() {
+    const handsignsDir = '/handsigns';
+
+    const files = await fetchHandsigns(handsignsDir);
+
+    const handsignsPaths = files.map(file => `${handsignsDir}/${file}`);
+
+    const Handsigns = await Promise.all(handsignsPaths.map(async filePath => {
+        const module = await import(filePath);
+        const gesture = module.aSign;
+        return gesture;
+    }));
+
+    return Handsigns;
+}
+
+async function fetchHandsigns(dir) {
+    const response = await fetch(dir);
+    const files = await response.text();
+    return files.split('\n').filter(file => file.trim() !== '');
 }
 
 socket.on('receive-gesture', (gesture, containerId) => {

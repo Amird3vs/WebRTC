@@ -15,6 +15,8 @@
     "cors": "^2.8.5",
     "ejs": "^3.1.9",
     "express": "^4.19.2",
+    "fingerpose": "^0.1.0",
+    "nodemailer": "^6.9.13",
     "peer": "^1.0.2",
     "peerjs": "^1.5.2",
     "socket.io": "^4.7.5"

@@ -5,6 +5,7 @@ import { generateRandomString, generateRandomNumbers } from "./KeyGeneration.js"
 import { Server } from "socket.io";
 import { ExpressPeerServer } from "peer";
 import cors from "cors";
+import nodemailer from 'nodemailer';
 
 const app = express();
 const server = createServer(app);
@@ -20,6 +21,8 @@ const peerServer = ExpressPeerServer(server, {
 app.set("view engine", "ejs");
 
 app.use("/peerjs", peerServer);
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
 app.use(cors());
@@ -39,6 +42,35 @@ app.get("/", (req, res) => {
 
 app.get("/:room", (req, res) => {
   res.render("room", { roomId: req.params.room });
+});
+
+app.post("/send-email", (req, res) => {
+  const { to, subject, text } = req.body;
+
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: 'salinsenyas.mm24@gmail.com',
+      pass: 'pmsx ubuh wauo jzsf '
+    }
+  });
+
+  const mailOptions = {
+    from: '"Salinsenyas" <salinsenyas.mm24@gmail.com>',
+    to: to,
+    subject: subject,
+    text: text
+  };
+
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.log(error);
+      res.status(500).send('Error sending email');
+    } else {
+      console.log('Email sent: ' + info.response);
+      res.send('Email sent successfully');
+    }
+  });
 });
 
 io.on("connection", (socket) => {
