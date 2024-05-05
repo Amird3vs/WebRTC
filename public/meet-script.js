@@ -751,9 +751,7 @@ async function detectSign(net) {
             container.style.borderColor = '#15E8D8';
             socket.emit('gesture-detected', 'blue', containerId);
 
-            const Handsigns = await importHandsigns();
-
-            const GE = new fp.GestureEstimator(Object.values(Handsigns));
+            const GE = new fp.GestureEstimator([fp.Gestures.VictoryGesture, fp.Gestures.ThumbsUpGesture]);
             const gesture = GE.estimate(handData[0].landmarks, 8.5);
             const mostConfidentPrediction = gesture.gestures[0];
 
@@ -765,28 +763,6 @@ async function detectSign(net) {
             container.style.borderColor = 'rgba(220, 220, 220, 0.1)';
         }
     }, 100);
-}
-
-async function importHandsigns() {
-    const handsignsDir = '/handsigns';
-
-    const files = await fetchHandsigns(handsignsDir);
-
-    const handsignsPaths = files.map(file => `${handsignsDir}/${file}`);
-
-    const Handsigns = await Promise.all(handsignsPaths.map(async filePath => {
-        const module = await import(filePath);
-        const gesture = module.aSign;
-        return gesture;
-    }));
-
-    return Handsigns;
-}
-
-async function fetchHandsigns(dir) {
-    const response = await fetch(dir);
-    const files = await response.text();
-    return files.split('\n').filter(file => file.trim() !== '');
 }
 
 socket.on('receive-gesture', (gesture, containerId) => {

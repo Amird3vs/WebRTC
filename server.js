@@ -6,6 +6,9 @@ import { Server } from "socket.io";
 import { ExpressPeerServer } from "peer";
 import cors from "cors";
 import nodemailer from 'nodemailer';
+import { fileURLToPath } from 'url';
+import { readFile } from 'fs/promises';
+import path from 'path';
 
 const app = express();
 const server = createServer(app);
@@ -44,33 +47,58 @@ app.get("/:room", (req, res) => {
   res.render("room", { roomId: req.params.room });
 });
 
-app.post("/send-email", (req, res) => {
-  const { to, subject, text } = req.body;
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-  const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-      user: 'salinsenyas.mm24@gmail.com',
-      pass: 'pmsx ubuh wauo jzsf '
-    }
+app.post("/send-email", async (req, res) => {
+  const { to, classification, topic } = req.body;
+
+  const currentDate = new Date().toLocaleString(undefined, {
+    year: 'numeric',
+    month: 'numeric',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+    hour12: true
   });
 
-  const mailOptions = {
-    from: '"Salinsenyas" <salinsenyas.mm24@gmail.com>',
-    to: to,
-    subject: subject,
-    text: text
-  };
+  if (!to || !classification || !topic) {
+    return res.status(400).send('Missing required fields');
+  }
 
-  transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      console.log(error);
-      res.status(500).send('Error sending email');
-    } else {
-      console.log('Email sent: ' + info.response);
-      res.send('Email sent successfully');
-    }
-  });
+  const templatePath = path.join(__dirname, 'emailTemplates', 'email.html');
+
+  try {
+    const data = await readFile(templatePath, 'utf8');
+
+    const htmlContent = data
+      .replace('{to}', to)
+      .replace('{classification}', classification)
+      .replace('{topic}', topic)
+      .replace('{date}', currentDate);
+
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: 'salinsenyas.mm24@gmail.com',
+        pass: 'pmsx ubuh wauo jzsf'
+      }
+    });
+
+    const mailOptions = {
+      from: '"SalinSenyas" <salinsenyas.mm24@gmail.com>',
+      to: to,
+      subject: 'Topic request',
+      html: htmlContent
+    };
+
+    const info = await transporter.sendMail(mailOptions);
+    console.log('Email sent:', info.response);
+    res.send('Email sent successfully');
+  } catch (error) {
+    console.error('Error sending email:', error);
+    res.status(500).send('Error sending email');
+  }
 });
 
 io.on("connection", (socket) => {
