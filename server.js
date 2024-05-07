@@ -119,6 +119,10 @@ io.on("connection", (socket) => {
     socket.on("gesture-detected", (gesture, userName) => {
       socket.to(roomId).emit("receive-gesture", gesture, userName);
     });
+    socket.on('recognized-gesture-letter', ({ gesture, letter }) => {
+      socket.to(roomId).emit('receive-gesture-letter', gesture, letter);
+      console.log(gesture)
+    });
     socket.on("disconnect", () => {
       socket.to(roomId).emit('user-disconnected', userId);
     });

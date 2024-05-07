@@ -9,8 +9,7 @@ const queryParams = new URLSearchParams(window.location.search);
 const user = queryParams.get('displayName');
 
 var peer = new Peer({
-    host: '127.0.0.1',
-    port: '3000',
+    host: 'webrtc-9u7q.onrender.com',
     path: '/peerjs',
     config: {
         'iceServers': [
@@ -758,6 +757,14 @@ async function detectSign(net) {
             if (mostConfidentPrediction) {
                 socket.emit('recognized-gesture', mostConfidentPrediction.name);
                 console.log('Recognized gesture:', mostConfidentPrediction.name);
+
+                const letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
+
+                const randomLetter = letters[Math.floor(Math.random() * letters.length)];
+                const letterDisplay = document.createElement('div');
+                letterDisplay.textContent = `${randomLetter}`;
+                container.appendChild(letterDisplay);
+                socket.emit('recognized-gesture-letter', { gesture: mostConfidentPrediction.name, letter: randomLetter });
             }
         } else {
             container.style.borderColor = 'rgba(220, 220, 220, 0.1)';
@@ -777,6 +784,17 @@ socket.on('receive-gesture', (gesture, containerId) => {
     } else {
         console.error(`Container with id ${containerId} not found.`);
     }
+});
+
+socket.on('receive-gesture-letter', (gesture, letter) => {
+    console.log(gesture);
+    console.log(letter);
+    const containerId = 'your-container-id'; // Update this with your actual container ID
+    const container = document.getElementById(containerId);
+    const receivedContainer = document.getElementById('received-container');
+    const receivedMessage = document.createElement('div');
+    receivedMessage.textContent = `Received gesture: ${gesture}, letter: ${letter}`;
+    container.appendChild(receivedMessage);
 });
 
 runHandpose();
