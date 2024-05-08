@@ -78,6 +78,16 @@ main {
     padding: 10px;
 }
 
+.letterDisplay {
+    margin-top: 0;
+    text-align: center;
+    width: 50%;
+    border-radius: 20px;
+    background-color: rgba(0, 0, 0, 0.1);
+    font-size: 1.5rem;
+    color: #15E8D8;
+}
+
 #video-grid {
     display: grid;
     place-items: center;
