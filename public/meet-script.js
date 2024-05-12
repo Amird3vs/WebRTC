@@ -1,4 +1,3 @@
-
 const socket = io("/");
 const videoGrid = document.getElementById("video-grid");
 const myVideo = document.createElement("video");
@@ -10,7 +9,8 @@ const queryParams = new URLSearchParams(window.location.search);
 const user = queryParams.get('displayName');
 
 var peer = new Peer({
-    host: 'webrtc-9u7q.onrender.com',
+    host: '127.0.0.1',
+    port: '3000',
     path: '/peerjs',
     config: {
         'iceServers': [
@@ -732,9 +732,40 @@ function updateTimeAndCode() {
     }
 }
 
+// function readPhrasesFromFile(callback) {
+//     const xhr = new XMLHttpRequest();
+//     xhr.open('GET', 'A-to-Z.txt', true);
+//     xhr.onreadystatechange = function () {
+//         if (xhr.readyState === 4 && xhr.status === 200) {
+//             const data = xhr.responseText;
+//             const phrases = JSON.parse(`{${data}}`);
+//             callback(phrases);
+//         }
+//     };
+//     xhr.send();
+// }
+
+// function filterPhrasesByFirstLetter(letter, callback) {
+//     readPhrasesFromFile(phrases => {
+//         const filteredPhrases = Object.entries(phrases).filter(([key, value]) => key.charAt(0).toUpperCase() === letter.toUpperCase());
+//         const filteredPhrasesObject = Object.fromEntries(filteredPhrases);
+//         callback(filteredPhrasesObject);
+//     });
+// }
+
+// filterPhrasesByFirstLetter('A', console.log);
+// filterPhrasesByFirstLetter('B', console.log);
+
 async function runHandpose() {
     const net = await handpose.load();
     console.log('Handpose model loaded.');
+    Swal.fire({
+        icon: 'success',
+        title: 'ChismiSign',
+        text: 'Handpose Model Loaded!',
+        showConfirmButton: false,
+        timer: 1000
+    });
     detectSign(net);
 }
 
@@ -762,10 +793,13 @@ async function detectSign(net) {
                 socket.emit('recognized-gesture', mostConfidentPrediction.name);
                 console.log('Recognized gesture:', mostConfidentPrediction.name);
 
-                const randomLetter = getRandomLetter();
-                letters.push(randomLetter);
-
-                socket.emit('recognized-gesture-letter', { gesture: mostConfidentPrediction.name, letter: randomLetter });
+                if (mostConfidentPrediction.name === 'victory') {
+                    letters.push('V');
+                } else if (mostConfidentPrediction.name === 'thumbs_up') {
+                    const randomLetter = getRandomLetter();
+                    letters.push(randomLetter);
+                }
+                socket.emit('recognized-gesture-letter', { letter: letters });
                 updateLetterDisplay();
             }
         } else {
@@ -780,17 +814,18 @@ async function detectSign(net) {
 
     function updateLetterDisplay() {
         const letterDisplay = document.getElementById('letterDisplay');
-        letterDisplay.textContent = letters.join(' ');
+        letterDisplay.textContent = letters.join('');
 
         clearTimeout(displayTimeout);
         displayTimeout = setTimeout(() => {
             letters = [];
             letterDisplay.textContent = '';
-        }, 5000);
+        }, 3000);
     }
 
-    socket.on('receive-gesture-letter', (gesture, letter) => {
-        letters.push(letter);
+    socket.on('receive-gesture-letter', (receivedLetters) => {
+        letters = [];
+        letters.push(...receivedLetters);
         updateLetterDisplay();
     });
 }

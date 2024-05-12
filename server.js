@@ -1,6 +1,5 @@
 import express from "express";
 import { createServer } from "http";
-// import { v4 as uuidv4 } from "uuid";
 import { generateRandomString, generateRandomNumbers } from "./KeyGeneration.js"
 import { Server } from "socket.io";
 import { ExpressPeerServer } from "peer";
@@ -119,9 +118,9 @@ io.on("connection", (socket) => {
     socket.on("gesture-detected", (gesture, userName) => {
       socket.to(roomId).emit("receive-gesture", gesture, userName);
     });
-    socket.on('recognized-gesture-letter', ({ gesture, letter }) => {
-      socket.to(roomId).emit('receive-gesture-letter', gesture, letter);
-      console.log(gesture)
+    socket.on('recognized-gesture-letter', ({ letter }) => {
+      socket.to(roomId).emit('receive-gesture-letter', letter);
+      console.log(letter);
     });
     socket.on("disconnect", () => {
       socket.to(roomId).emit('user-disconnected', userId);
