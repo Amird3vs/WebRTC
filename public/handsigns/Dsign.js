@@ -1,4 +1,5 @@
-import {Finger, FingerCurl, FingerDirection, GestureDescription} from 'fingerpose';
+import {Finger, FingerCurl, FingerDirection} from '../fingerpose/src/FingerDescription.js';
+import {GestureDescription} from '../fingerpose/src/GestureDescription.js';
 
 export const dSign = new GestureDescription('D');
 // [

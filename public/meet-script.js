@@ -1,3 +1,30 @@
+import { aSign } from './handsigns/Asign.js';
+import { bSign } from './handsigns/Bsign.js';
+import { cSign } from './handsigns/Csign.js';
+import { dSign } from './handsigns/Dsign.js';
+import { eSign } from './handsigns/Esign.js';
+import { fSign } from './handsigns/Fsign.js';
+import { gSign } from './handsigns/Gsign.js';
+import { hSign } from './handsigns/Hsign.js';
+import { iSign } from './handsigns/Isign.js';
+import { jSign } from './handsigns/Jsign.js';
+import { kSign } from './handsigns/Ksign.js';
+import { lSign } from './handsigns/Lsign.js';
+import { mSign } from './handsigns/Msign.js';
+import { nSign } from './handsigns/Nsign.js';
+import { oSign } from './handsigns/Osign.js';
+import { pSign } from './handsigns/Psign.js';
+import { qSign } from './handsigns/Qsign.js';
+import { rSign } from './handsigns/Rsign.js';
+import { sSign } from './handsigns/Ssign.js';
+import { tSign } from './handsigns/Tsign.js';
+import { uSign } from './handsigns/Usign.js';
+import { vSign } from './handsigns/Vsign.js';
+import { wSign } from './handsigns/Wsign.js';
+import { xSign } from './handsigns/Xsign.js';
+import { ySign } from './handsigns/Ysign.js';
+import { zSign } from './handsigns/Zsign.js';
+
 const socket = io("/");
 const videoGrid = document.getElementById("video-grid");
 const myVideo = document.createElement("video");
@@ -135,22 +162,6 @@ let send = document.getElementById("send");
 let messages = document.querySelector(".chatLogs");
 let unreadMessages = 0;
 let sentMessage = false;
-
-// send.addEventListener("click", (e) => {
-//   if (text.value.length !== 0) {
-//     socket.emit("message", text.value);
-//     text.value = "";
-//     sentMessage = true;
-//   }
-// });
-
-// text.addEventListener("keydown", (e) => {
-//   if (e.key === "Enter" && text.value.length !== 0) {
-//     socket.emit("message", text.value);
-//     text.value = "";
-//     sentMessage = true;
-//   }
-// });
 
 const muteButton = document.querySelector("#muteButton");
 const stopVideo = document.querySelector("#stopVideo");
@@ -393,63 +404,6 @@ function saveFileFromBinary(binaryData, fileName, fileType, userName) {
 
     return messageContainer;
 }
-
-// let lastMessageSender = '';
-// let lastMessageTime = '';
-// let lastMessageContainer = null;
-
-// socket.on("createMessage", (message, userName) => {
-//   const currentTime = new Date();
-//   const currentTimeString = currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
-//   if (userName === lastMessageSender && currentTimeString === lastMessageTime) {
-//     const messageText = document.createElement('span');
-//     messageText.classList.add('message-text');
-//     messageText.textContent = message;
-
-//     lastMessageContainer.appendChild(messageText);
-//   } else {
-//     const messageContainer = document.createElement('div');
-//     messageContainer.classList.add('message');
-
-//     const senderInfo = document.createElement('div');
-//     senderInfo.classList.add('sender-info');
-
-//     const senderName = document.createElement('span');
-//     senderName.classList.add('sender-name');
-//     senderName.textContent = userName === user ? "Me" : userName;
-
-//     const timeInfo = document.createElement('span');
-//     timeInfo.classList.add('time');
-//     timeInfo.textContent = currentTimeString;
-
-//     const messageText = document.createElement('span');
-//     messageText.classList.add('message-text');
-//     messageText.textContent = message;
-
-//     senderInfo.appendChild(senderName);
-//     senderInfo.appendChild(timeInfo);
-
-//     messageContainer.appendChild(senderInfo);
-//     messageContainer.appendChild(messageText);
-
-//     messages.appendChild(messageContainer);
-//     lastMessageContainer = messageContainer;
-//   }
-
-//   messages.scrollTop = messages.scrollHeight;
-
-//   if (!sentMessage) {
-//     const isChatWindowOpen = document.querySelector('.main__chat_window').style.display === 'flex';
-//     if (!isChatWindowOpen) {
-//       updateUnreadMessageCount(unreadMessages + 1);
-//     }
-//   }
-//   sentMessage = false;
-
-//   lastMessageSender = userName;
-//   lastMessageTime = currentTimeString;
-// });
 
 function toggleReactions() {
     const button = document.querySelector(".reactions-btn");
@@ -731,30 +685,6 @@ function updateTimeAndCode() {
     }
 }
 
-// function readPhrasesFromFile(callback) {
-//     const xhr = new XMLHttpRequest();
-//     xhr.open('GET', 'A-to-Z.txt', true);
-//     xhr.onreadystatechange = function () {
-//         if (xhr.readyState === 4 && xhr.status === 200) {
-//             const data = xhr.responseText;
-//             const phrases = JSON.parse(`{${data}}`);
-//             callback(phrases);
-//         }
-//     };
-//     xhr.send();
-// }
-
-// function filterPhrasesByFirstLetter(letter, callback) {
-//     readPhrasesFromFile(phrases => {
-//         const filteredPhrases = Object.entries(phrases).filter(([key, value]) => key.charAt(0).toUpperCase() === letter.toUpperCase());
-//         const filteredPhrasesObject = Object.fromEntries(filteredPhrases);
-//         callback(filteredPhrasesObject);
-//     });
-// }
-
-// filterPhrasesByFirstLetter('A', console.log);
-// filterPhrasesByFirstLetter('B', console.log);
-
 async function runHandpose() {
     const net = await handpose.load();
     console.log('Handpose model loaded.');
@@ -770,7 +700,6 @@ async function runHandpose() {
 
 async function detectSign(net) {
     let letters = [];
-    let displayTimeout;
 
     setInterval(async () => {
         const video = document.querySelector('video');
@@ -784,48 +713,101 @@ async function detectSign(net) {
             container.style.borderColor = '#15E8D8';
             socket.emit('gesture-detected', 'blue', containerId);
 
-            const GE = new fp.GestureEstimator([fp.Gestures.VictoryGesture, fp.Gestures.ThumbsUpGesture]);
+            const GE = new fp.GestureEstimator([
+                aSign, bSign, cSign, dSign, eSign, fSign, gSign, hSign, iSign, jSign,
+                kSign, lSign, mSign, nSign, oSign, pSign, qSign, rSign, sSign, tSign,
+                uSign, vSign, wSign, xSign, ySign, zSign
+            ]);
+
             const gesture = GE.estimate(handData[0].landmarks, 8.5);
             const mostConfidentPrediction = gesture.gestures[0];
 
             if (mostConfidentPrediction) {
                 socket.emit('recognized-gesture', mostConfidentPrediction.name);
-                console.log('Recognized gesture:', mostConfidentPrediction.name);
 
-                if (mostConfidentPrediction.name === 'victory') {
-                    letters.push('V');
-                } else if (mostConfidentPrediction.name === 'thumbs_up') {
-                    const randomLetter = getRandomLetter();
-                    letters.push(randomLetter);
+                letters.push(mostConfidentPrediction.name);
+
+                if (letters.length === 10) {
+                    const mostFrequentLetter = findMostFrequentLetter(letters);
+                    console.log('Most frequent letter:', mostFrequentLetter);
+
+                    socket.emit('recognized-gesture-letter', { letter: mostFrequentLetter });
+
+                    letters = [];
                 }
-                socket.emit('recognized-gesture-letter', { letter: letters });
-                updateLetterDisplay();
             }
         } else {
             container.style.borderColor = 'rgba(220, 220, 220, 0.1)';
         }
     }, 100);
 
-    function getRandomLetter() {
-        const letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
-        return letters[Math.floor(Math.random() * letters.length)];
+    function findMostFrequentLetter(letters) {
+        const letterCount = {};
+        letters.forEach(letter => {
+            letterCount[letter] = (letterCount[letter] || 0) + 1;
+        });
+
+        let mostFrequentLetter = '';
+        let maxCount = 0;
+        for (const letter in letterCount) {
+            if (letterCount[letter] > maxCount) {
+                maxCount = letterCount[letter];
+                mostFrequentLetter = letter;
+            }
+        }
+        return mostFrequentLetter;
     }
 
-    function updateLetterDisplay() {
-        const letterDisplay = document.getElementById('letterDisplay');
-        letterDisplay.textContent = letters.join('');
+    let accumulatedLetters = '';
+    let displayTimeout;
 
+    socket.on('receive-gesture-letter', (letter) => {
+        accumulatedLetters += letter;
+        updateUIWithLetters(accumulatedLetters);
+        resetTimeout();
+    });
+
+    function updateUIWithLetters(letters) {
+        const letterDisplay = document.getElementById('letterDisplay');
+        if (letters) {
+            letterDisplay.textContent = `${letters}`;
+            clearTimeout(displayTimeout);
+            displayTimeout = setTimeout(() => {
+                accumulatedLetters = '';
+                letterDisplay.textContent = '';
+            }, 10000);
+        } else {
+            letterDisplay.textContent = '';
+        }
+    }
+
+    function resetTimeout() {
         clearTimeout(displayTimeout);
         displayTimeout = setTimeout(() => {
-            letters = [];
-            letterDisplay.textContent = '';
-        }, 3000);
+            accumulatedLetters = '';
+            updateUIWithLetters(accumulatedLetters);
+        }, 5000);
     }
+}
 
-    socket.on('receive-gesture-letter', (receivedLetters) => {
-        letters = [];
-        letters.push(...receivedLetters);
-        updateLetterDisplay();
+function readPhrasesFromFile(callback) {
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', 'A-to-Z.txt', true);
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            const data = xhr.responseText;
+            const phrases = JSON.parse(`{${data}}`);
+            callback(phrases);
+        }
+    };
+    xhr.send();
+}
+
+function filterPhrasesByFirstLetter(letter, callback) {
+    readPhrasesFromFile(phrases => {
+        const filteredPhrases = Object.entries(phrases).filter(([key, value]) => key.charAt(0).toUpperCase() === letter.toUpperCase());
+        const filteredPhrasesObject = Object.fromEntries(filteredPhrases);
+        callback(filteredPhrasesObject);
     });
 }
 

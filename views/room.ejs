@@ -49,6 +49,9 @@
           <div class="letterDisplay" id="letterDisplay">
 
           </div>
+          <div class="phraseDisplay" id="phrasesDisplay">
+
+          </div>
         </div>
 
         <div class="main__middle__right animate__animated animate__slideInRight" id="mainRight">
@@ -59,18 +62,8 @@
                 <p class="popup-title">Shared files</p>
                 <button class="close-button" onclick="toggleSection('messages')">&#10006;</button>
               </div>
-              <div class="chatLogs">
-                <!-- Chat messages will be displayed here -->
-              </div>
               <div class="input-msg">
                 <div class="input-container">
-                  <!-- <div class="message-container">
-                    <input id="chat_message" class="chat_message" type="text" autocomplete="off"
-                      placeholder="Type message here...">
-                    <button id="send" class="send-button" onclick="sendMessage()">
-                      <i class="fas fa-paper-plane"></i>
-                    </button>
-                  </div> -->
                   <div class="attach-container">
                     <input type="file" id="fileInput" onchange="handleFileSelect(event)" />
                     <button class="attach-btn" onclick="sendFile()"><i class="fas fa-paper-plane"></i></button>
@@ -188,9 +181,6 @@
               </button>
             </div>
           </div>
-          <!-- <button id="presentButton" class="options__button">
-            <span class="material-symbols-outlined">screen_share</span>
-          </button> -->
         </div>
 
         <div class="options__right">
@@ -213,6 +203,7 @@
 </body>
 <script src="https://cdn.jsdelivr.net/npm/fingerpose@0.1.0/dist/fingerpose.min.js" type="text/javascript"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="meet-script.js"></script>
+<script type="module" src="meet-script.js"></script>
 <script type="module" src="signs.js"></script>
+
 </html>
