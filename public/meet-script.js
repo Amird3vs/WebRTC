@@ -36,7 +36,8 @@ const queryParams = new URLSearchParams(window.location.search);
 const user = queryParams.get('displayName');
 
 var peer = new Peer({
-    host: 'webrtc-9u7q.onrender.com',
+    host: '127.0.0.1',
+    port: '3000',
     path: '/peerjs',
     config: {
         'iceServers': [
@@ -700,6 +701,7 @@ async function runHandpose() {
 
 async function detectSign(net) {
     let letters = [];
+    let letterAccumulation = true; // Flag to control letter accumulation
 
     setInterval(async () => {
         const video = document.querySelector('video');
@@ -725,15 +727,21 @@ async function detectSign(net) {
             if (mostConfidentPrediction) {
                 socket.emit('recognized-gesture', mostConfidentPrediction.name);
 
-                letters.push(mostConfidentPrediction.name);
+                if (letterAccumulation) {
+                    letters.push(mostConfidentPrediction.name);
+                }
 
-                if (letters.length === 10) {
+                if (letters.length === 7) {
                     const mostFrequentLetter = findMostFrequentLetter(letters);
                     console.log('Most frequent letter:', mostFrequentLetter);
 
                     socket.emit('recognized-gesture-letter', { letter: mostFrequentLetter });
 
                     letters = [];
+                    letterAccumulation = false;
+                    setTimeout(() => {
+                        letterAccumulation = true;
+                    }, 3000);
                 }
             }
         } else {
