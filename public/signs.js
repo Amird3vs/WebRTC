@@ -39,7 +39,6 @@ async function runHandpose() {
 }
 
 async function detectSign(net) {
-    let letters = [];
     let letterAccumulation = true;
 
     setInterval(async () => {
@@ -65,75 +64,44 @@ async function detectSign(net) {
 
             if (mostConfidentPrediction) {
                 socket.emit('recognized-gesture', mostConfidentPrediction.name);
+            }
 
-                if (letterAccumulation) {
-                    letters.push(mostConfidentPrediction.name);
-                }
+            if (letterAccumulation && mostConfidentPrediction) {
+                socket.emit('recognized-gesture-letter', { letter: mostConfidentPrediction.name });
+                letterAccumulation = false;
 
-                if (letters.length === 10) {
-                    const mostFrequentLetter = findMostFrequentLetter(letters);
-                    console.log('Most frequent letter:', mostFrequentLetter);
-
-                    socket.emit('recognized-gesture-letter', { letter: mostFrequentLetter });
-
-                    letters = [];
-                    letterAccumulation = false;
-
-                    setTimeout(() => {
-                        letterAccumulation = true;
-                    }, 3000);
-                }
+                setTimeout(() => {
+                    letterAccumulation = true;
+                }, 3000);
             }
         } else {
             container.style.borderColor = 'rgba(220, 220, 220, 0.1)';
         }
     }, 100);
 
-    function findMostFrequentLetter(letters) {
-        const letterCount = {};
-        letters.forEach(letter => {
-            letterCount[letter] = (letterCount[letter] || 0) + 1;
-        });
-
-        let mostFrequentLetter = '';
-        let maxCount = 0;
-        for (const letter in letterCount) {
-            if (letterCount[letter] > maxCount) {
-                maxCount = letterCount[letter];
-                mostFrequentLetter = letter;
-            }
-        }
-        return mostFrequentLetter;
-    }
-
-    let accumulatedLetters = '';
-    let displayTimeout;
-
     socket.on('receive-gesture-letter', (letter) => {
-        accumulatedLetters += letter;
-        updateUIWithLetters(accumulatedLetters);
+        updateUIWithLetters(letter);
         resetTimeout();
     });
 
-    function updateUIWithLetters(letters) {
+    let displayTimeout;
+
+    function updateUIWithLetters(letter) {
         const letterDisplay = document.getElementById('letterDisplay');
-        if (letters) {
-            letterDisplay.textContent = `${letters}`;
+        if (letter) {
+            letterDisplay.textContent += letter;
             clearTimeout(displayTimeout);
             displayTimeout = setTimeout(() => {
-                accumulatedLetters = '';
                 letterDisplay.textContent = '';
             }, 10000);
-        } else {
-            letterDisplay.textContent = '';
         }
     }
 
     function resetTimeout() {
         clearTimeout(displayTimeout);
         displayTimeout = setTimeout(() => {
-            accumulatedLetters = '';
-            updateUIWithLetters(accumulatedLetters);
+            const letterDisplay = document.getElementById('letterDisplay');
+            letterDisplay.textContent = '';
         }, 5000);
     }
 }
